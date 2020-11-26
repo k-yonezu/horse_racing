@@ -3,12 +3,14 @@ from tensorflow import keras
 
 MODEL_DATA_PATH = "model_data/"
 
-def read_model():
-    pass
+def read_model(model_name):
+    model = tf.keras.models.load_model(MODEL_DATA_PATH + model_name)
+    print(f"{model_name} is read.")
+    return model
 
-def save_model(model, name="sample_model"):
-    model.save(MODEL_DATA_PATH + name)
-    print(f"{name} is saved.")
+def save_model(model, model_name="sample_model"):
+    model.save(MODEL_DATA_PATH + model_name)
+    print(f"{model_name} is saved.")
     
 def test():
     import os
@@ -24,10 +26,18 @@ def test():
     model.fit(train_data, train_target, epochs=5)
     
     file_name = "test_model"
-    save_model(model, name=file_name)
-    if not os.path.exists(MODEL_DATA_PATH+file_name):
+    save_model(model, file_name)
+    if os.path.exists(MODEL_DATA_PATH + file_name):
+        print("save_model: ok")
+    else:
         print(f"save_model: error (not found {file_name})")
-    print("save_model: ok")
-
+    
+    new_model = read_model(file_name)
+    loss, acc = new_model.evaluate(train_data, train_target, verbose=2)
+    if new_model.predict(train_data).shape[1] == 2: 
+        print("read_model: ok")
+    else:
+        print(f"read_model: error (output must be 2 dimensions.)")
+    
 if __name__ == "__main__":
     test()
