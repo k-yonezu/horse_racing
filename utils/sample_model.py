@@ -8,7 +8,7 @@ class HorseModel(Model):
         self.d1 = Dense(i_dimention, activation='relu')
         self.d2 = Dense(32, activation='relu')
         self.d3 = Dense(128, activation='relu')
-        self.d4 = Dense(2, activation='sigmoid')
+        self.d4 = Dense(1, activation='sigmoid')
         
     def call(self, x):
         x = self.d1(x)
