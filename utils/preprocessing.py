@@ -16,7 +16,7 @@ def add_n_race_data(df_race, df_horse, n_race=1):
             df_horse_low_race_id = df_horse_tmp.query('race_id <= @race_id')
             columns = df_horse_low_race_id.columns
             for n in range(1, n_race+1):
-                add_columns = list(map(lambda c: c+f"_{n}", columns))
+                add_columns = list(map(lambda c: c+f"-{n}", columns))
                 add_race = df_horse_low_race_id.iloc[-1-n:-n, :].reset_index(drop=True)
                 add_race.columns = add_columns
                 df_race_tmp = pd.concat([df_race_tmp, add_race], axis=1)
@@ -36,7 +36,7 @@ def add_n_race_data_para(df):
         df_horse_low_race_id = df.query('race_id <= @race_id')
         columns = df_horse_low_race_id.columns
         for n in range(1, n_race+1):
-            add_columns = list(map(lambda c: c+f"_{n}", columns))
+            add_columns = list(map(lambda c: c+f"-{n}", columns))
             add_race = df_horse_low_race_id.iloc[-1-n:-n, :].reset_index(drop=True)
             add_race.columns = add_columns
             df_race_tmp = pd.concat([df_race_tmp, add_race], axis=1)
