@@ -2,7 +2,6 @@ import pandas as pd
 import tensorflow as tf
 import numpy as np
 
-
 def add_n_race_data(df_race, df_horse, n_race=1):
     res = pd.DataFrame()
     horse_ids = list(set(df_horse['horse_id']))
