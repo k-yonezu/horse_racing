@@ -3,7 +3,7 @@ import datetime
 import pandas as pd
 import tensorflow as tf
 import numpy as np
-from tqdm import tqdm
+#from tqdm import tqdm
 
 def add_n_race_data(df_race, df_horse, n_race=1):
     res = pd.DataFrame()
@@ -103,7 +103,41 @@ def to_seconds(time):
     return td.total_seconds()
 
 def extract_weight(horse_weight):
-    if horse_weight == "計不":
+    if horse_weight == "計不" or type(horse_weight) != str:
         return -1
     weight = re.match(r"(\d+)\([+-]?\d+\)", horse_weight).groups()[0]
     return weight 
+
+def one_hot_encoding(df):
+    return pd.get_dummies(df)
+
+def make_label(rank_values, horse_number_values):
+    labels = []
+    high = 1 / 3
+    mid = 2 / 3
+    for rank, horse_number in zip(rank_values, horse_number_values):
+        # 欠損値の場合
+        if rank == -1:
+            labels.append(rank)
+            continue
+        # 順位が付かないデータに関しては最低レベルのラベルを付与
+        not_rank = False
+        # "(" => ...(再)　or ...(降)
+        for c in ["中", "取", "除", "(", "失"]:
+            if c in str(rank):
+                labels.append("low")
+                not_rank = True
+                break
+        if not_rank:
+            continue
+            
+        relative_rank = int(rank) / horse_number
+    
+        if relative_rank < high:
+            labels.append("high")
+        elif relative_rank < mid:
+            labels.append("middle")
+        else:
+            labels.append("low")
+            
+    return labels
