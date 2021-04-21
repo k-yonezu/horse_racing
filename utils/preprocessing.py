@@ -30,7 +30,7 @@ def add_n_race_data(df_race, df_horse, n_race=1):
 
 def join_n_race_para(df_horse):
     res = pd.DataFrame()
-    n_race = 15
+    n_race = 5
     arr_race_id = list(set(df_horse['race_id']))
     for race_id in arr_race_id:
         df_row_target = df_horse.query('race_id == @race_id').reset_index(drop=True)
