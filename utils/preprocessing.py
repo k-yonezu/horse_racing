@@ -28,7 +28,24 @@ def add_n_race_data(df_race, df_horse, n_race=1):
     return res.reset_index(drop=True)
 
 
-def join_n_race_para(df_horse):
+def join_n_race_para(df_horse, arr_race_id):
+    res = pd.DataFrame()
+    n_race = 15
+    for race_id in arr_race_id:
+        df_row_target = df_horse.query('race_id == @race_id').reset_index(drop=True)
+        df_horse = df_horse.query('race_id < @race_id').sort_values("race_id", ascending=False).reset_index(drop=True)
+        columns = df_horse.columns
+        for n in range(1, n_race+1):
+            df_row_n_race = df_horse.iloc[n-1:n, :].reset_index(drop=True)
+            df_row_n_race.columns = list(map(lambda c: c+f"-{n}", columns))
+            df_row_target = pd.concat([df_row_target, df_row_n_race], axis=1)
+
+        res = res.append(df_row_target)
+
+    return res.reset_index(drop=True)
+
+
+def once_join_n_race_para(df_horse):
     res = pd.DataFrame()
     n_race = 15
     arr_race_id = list(set(df_horse['race_id']))

@@ -29,6 +29,18 @@ def read_race_csv(path):
     return df
 
 
+def read_horse_race_csv(path):
+    df = pd.DataFrame()
+    for file in os.listdir(path):
+        base, ext = os.path.splitext(file)
+        if ext == '.csv' and 'horse_race' in base:
+            print(file)
+            df = df.append(pd.read_csv(path  + file))
+    df = df.astype({'race_id': float, 'horse_id': int})
+    df = df.reset_index(drop=True)
+    return df
+
+
 def read_target_horse_csv(path):
     df = pd.DataFrame()
     for file in os.listdir(path):
