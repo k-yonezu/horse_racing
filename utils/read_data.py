@@ -36,7 +36,7 @@ def read_horse_race_csv(path):
         if ext == '.csv' and 'horse_race' in base:
             print(file)
             df = df.append(pd.read_csv(path  + file))
-    df = df.astype({'race_id': float, 'horse_id': int})
+    df = df.astype({'race_id': float})
     df = df.reset_index(drop=True)
     return df
 
