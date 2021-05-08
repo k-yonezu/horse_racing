@@ -26,8 +26,8 @@ def join_n_race_for_test_data(df, df_target, n_race=3):
     res = pd.DataFrame()
     arr_horse_id = list(df_target['horse_id'])
     for horse_id in arr_horse_id:
-        df_row_target = df_target.query('horse_id == @horse_id').reset_index(drop=True)
         df_tmp = df.query('horse_id == @horse_id').sort_values("race_id", ascending=False).reset_index(drop=True)
+        df_row_target = df_target.query('horse_id == @horse_id').reset_index(drop=True)
         res = res.append(join_row(df_tmp, df_row_target, n_race))
 
     return res.reset_index(drop=True)
