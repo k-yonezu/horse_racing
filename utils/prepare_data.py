@@ -54,17 +54,41 @@ def prepare_train_data(raw_df: pd.DataFrame) -> pd.DataFrame:
 
     return df_for_learning
     
-def prepare_test_data(target_df: pd.DataFrame, past_data_df: pd.DataFrame):
-    target_df = process_features(target_df)
-    target_df.loc[: ,"rank-1"] = pp.make_label(target_df.loc[: ,"rank-1"].values, target_df.loc[: ,"total_horse_number_x-1"].values)
-    target_df.loc[: ,"rank-2"] = pp.make_label(target_df.loc[: ,"rank-2"].values, target_df.loc[: ,"total_horse_number_x-2"].values)
-    target_df.loc[: ,"rank-3"] = pp.make_label(target_df.loc[: ,"rank-3"].values, target_df.loc[: ,"total_horse_number_x-3"].values)
-    target_df = pp.one_hot_encoding(target_df[columns_after_processing])
+def prepare_data_for_prediction(df_for_prediction: pd.DataFrame, past_data_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    データを予測に使えるように加工
+    
+    Parameters
+    ----------
+    df_for_prediction : pandas.DataFrame
+        予測に使うデータ
+        
+    past_data_df : pandas.DataFrame
+        学習に使った過去データ、予測用データには一部のカテゴリデータしかないので、
+        one-hotベクトル化後、学習済みモデルの入力次元数と次元数が合わない。
+        そこで、過去データを参照して追加する。
+    
+    Retures
+    -------
+    df_after_processing : pandas.DataFrame
+        加工済み予測用データ
+    """
+    df_after_processing = process_features(df_for_prediction)
+    df_after_processing.loc[: ,"label"] = pp.make_label(df_after_processing.loc[: ,"rank"].values, df_after_processing.loc[: ,"total_horse_number_x"].values)
+    df_after_processing.loc[: ,"rank-1"] = pp.make_label(df_after_processing.loc[: ,"rank-1"].values, df_after_processing.loc[: ,"total_horse_number_x-1"].values)
+    df_after_processing.loc[: ,"rank-2"] = pp.make_label(df_after_processing.loc[: ,"rank-2"].values, df_after_processing.loc[: ,"total_horse_number_x-2"].values)
+    df_after_processing.loc[: ,"rank-3"] = pp.make_label(df_after_processing.loc[: ,"rank-3"].values, df_after_processing.loc[: ,"total_horse_number_x-3"].values)
+    df_after_processing = pp.one_hot_encoding(df_after_processing[columns_after_processing])
     past_data_df = process_features(past_data_df)
+    past_data_df.loc[: ,"label"] = pp.make_label(past_data_df.loc[: ,"rank"].values, past_data_df.loc[: ,"total_horse_number_x"].values)
     past_data_df.loc[: ,"rank-1"] = pp.make_label(past_data_df.loc[: ,"rank-1"].values, past_data_df.loc[: ,"total_horse_number_x-1"].values)
     past_data_df.loc[: ,"rank-2"] = pp.make_label(past_data_df.loc[: ,"rank-2"].values, past_data_df.loc[: ,"total_horse_number_x-2"].values)
     past_data_df.loc[: ,"rank-3"] = pp.make_label(past_data_df.loc[: ,"rank-3"].values, past_data_df.loc[: ,"total_horse_number_x-3"].values)
     past_data_df = pp.one_hot_encoding(past_data_df[columns_after_processing])
+    
+    pp.fill_missing_columns(df_after_processing, past_data_df)
+    
+    return df_after_processing
     
 def process_features(df_before_processing: pd.DataFrame) -> pd.DataFrame:
     """
