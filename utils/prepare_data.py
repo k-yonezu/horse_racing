@@ -45,10 +45,10 @@ def prepare_train_data(raw_df: pd.DataFrame) -> pd.DataFrame:
     """
     df_for_learning = process_features(raw_df)
     # ラベル作成 (MLP用)
-    df_for_learning["label"] = pp.make_label(df_for_learning["rank"].values, df_for_learning["total_horse_number_x"].values)
-    df_for_learning["rank-1"] = pp.make_label(df_for_learning["rank-1"].values, df_for_learning["total_horse_number_x-1"].values)
-    df_for_learning["rank-2"] = pp.make_label(df_for_learning["rank-2"].values, df_for_learning["total_horse_number_x-2"].values)
-    df_for_learning["rank-3"] = pp.make_label(df_for_learning["rank-3"].values, df_for_learning["total_horse_number_x-3"].values)
+    df_for_learning.loc[: ,"label"] = pp.make_label(df_for_learning.loc[: ,"rank"].values, df_for_learning.loc[: ,"total_horse_number_x"].values)
+    df_for_learning.loc[: ,"rank-1"] = pp.make_label(df_for_learning.loc[: ,"rank-1"].values, df_for_learning.loc[: ,"total_horse_number_x-1"].values)
+    df_for_learning.loc[: ,"rank-2"] = pp.make_label(df_for_learning.loc[: ,"rank-2"].values, df_for_learning.loc[: ,"total_horse_number_x-2"].values)
+    df_for_learning.loc[: ,"rank-3"] = pp.make_label(df_for_learning.loc[: ,"rank-3"].values, df_for_learning.loc[: ,"total_horse_number_x-3"].values)
     # one-hotベクトル化
     df_for_learning = pp.one_hot_encoding(df_for_learning[columns_after_processing])
 
@@ -68,35 +68,35 @@ def process_features(df_before_processing: pd.DataFrame) -> pd.DataFrame:
         特徴量加工後のデータフレーム
     """
     df_after_processing = df_before_processing[columns_before_processing]
-    df_after_processing ["where_racecourse"] = df_after_processing ["where_racecourse"].map(pp.extract_place)
+    df_after_processing.loc[:, "where_racecourse"] = df_after_processing.loc[: ,"where_racecourse"].map(pp.extract_place)
 
-    df_after_processing["sex"] = df_after_processing["sex_and_age"].map(lambda sex_and_age: sex_and_age[0])
-    df_after_processing["age"] = df_after_processing["sex_and_age"].map(lambda sex_and_age: sex_and_age[1:])
+    df_after_processing.loc[: ,"sex"] = df_after_processing.loc[: ,"sex_and_age"].map(lambda sex_and_age: sex_and_age[0])
+    df_after_processing.loc[: ,"age"] = df_after_processing.loc[: ,"sex_and_age"].map(lambda sex_and_age: sex_and_age[1:])
     
-    df_after_processing["goal_time-1"] = df_after_processing["goal_time-1"].map(pp.to_seconds)
-    df_after_processing["goal_time-2"] = df_after_processing["goal_time-2"].map(pp.to_seconds)
-    df_after_processing["goal_time-3"] = df_after_processing["goal_time-3"].map(pp.to_seconds)
+    df_after_processing.loc[: ,"goal_time-1"] = df_after_processing.loc[: ,"goal_time-1"].map(pp.to_seconds)
+    df_after_processing.loc[: ,"goal_time-2"] = df_after_processing.loc[: ,"goal_time-2"].map(pp.to_seconds)
+    df_after_processing.loc[: ,"goal_time-3"] = df_after_processing.loc[: ,"goal_time-3"].map(pp.to_seconds)
     
-    df_after_processing["horse_weight"] = df_after_processing["horse_weight"].map(pp.extract_weight).astype(np.int64)
+    df_after_processing.loc[: ,"horse_weight"] = df_after_processing.loc[: ,"horse_weight"].map(pp.extract_weight).astype(np.int64)
     
-    df_after_processing["prize-1"] = df_after_processing["prize-1"].map(
+    df_after_processing.loc[: ,"prize-1"] = df_after_processing.loc[: ,"prize-1"].map(
         lambda prize: prize.replace(",", "") if type(prize) == str else prize).astype(np.float32)
-    df_after_processing["prize-2"] = df_after_processing["prize-2"].map(
+    df_after_processing.loc[: ,"prize-2"] = df_after_processing.loc[: ,"prize-2"].map(
         lambda prize: prize.replace(",", "") if type(prize) == str else prize).astype(np.float32)
-    df_after_processing["prize-3"] = df_after_processing["prize-3"].map(
+    df_after_processing.loc[: ,"prize-3"] = df_after_processing.loc[: ,"prize-3"].map(
         lambda prize: prize.replace(",", "") if type(prize) == str else prize).astype(np.float32)
     
-    df_after_processing["kyakusitu-1"] = [pp.kyakusitu_code_c(n, r) 
-        for n, r in zip(df_after_processing["total_horse_number_x-1"].values, df_after_processing["half_way_rank-1"])]
-    df_after_processing["kyakusitu-2"] = [pp.kyakusitu_code_c(n, r) 
-        for n, r in zip(df_after_processing["total_horse_number_x-2"].values, df_after_processing["half_way_rank-2"])]
-    df_after_processing["kyakusitu-3"] = [pp.kyakusitu_code_c(n, r) 
-        for n, r in zip(df_after_processing["total_horse_number_x-3"].values, df_after_processing["half_way_rank-3"])]
+    df_after_processing.loc[: ,"kyakusitu-1"] = [pp.kyakusitu_code_c(n, r) 
+        for n, r in zip(df_after_processing.loc[: ,"total_horse_number_x-1"].values, df_after_processing.loc[: ,"half_way_rank-1"])]
+    df_after_processing.loc[: ,"kyakusitu-2"] = [pp.kyakusitu_code_c(n, r) 
+        for n, r in zip(df_after_processing.loc[: ,"total_horse_number_x-2"].values, df_after_processing.loc[: ,"half_way_rank-2"])]
+    df_after_processing.loc[: ,"kyakusitu-3"] = [pp.kyakusitu_code_c(n, r) 
+        for n, r in zip(df_after_processing.loc[: ,"total_horse_number_x-3"].values, df_after_processing.loc[: ,"half_way_rank-3"])]
     
     # 欠損値処理
     df_after_processing = df_after_processing.replace('---', -1)
     df_after_processing = df_after_processing.fillna(-1)
 
-    df_after_processing["odds"] = df_after_processing["odds"].astype(np.float32)
+    df_after_processing.loc[: ,"odds"] = df_after_processing.loc[: ,"odds"].astype(np.float32)
     
     return df_after_processing
