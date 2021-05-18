@@ -41,34 +41,62 @@ def prepare_train_data(raw_df: pd.DataFrame) -> pd.DataFrame:
     Returns
     -------
     df_for_learning : pandas.DataFrame
-        学習用データ
+        学習用データフレーム
     """
-    df_for_learning = raw_df[columns_before_processing]
-    df_for_learning ["where_racecourse"] = df_for_learning ["where_racecourse"].map(pp.extract_place)
+    df_for_learning = process_features(raw_df)
+    # ラベル作成 (MLP用)
+    df_for_learning["label"] = pp.make_label(df_for_learning["rank"].values, df_for_learning["total_horse_number_x"].values)
+    df_for_learning["rank-1"] = pp.make_label(df_for_learning["rank-1"].values, df_for_learning["total_horse_number_x-1"].values)
+    df_for_learning["rank-2"] = pp.make_label(df_for_learning["rank-2"].values, df_for_learning["total_horse_number_x-2"].values)
+    df_for_learning["rank-3"] = pp.make_label(df_for_learning["rank-3"].values, df_for_learning["total_horse_number_x-3"].values)
+    # one-hotベクトル化
+    df_for_learning = pp.one_hot_encoding(df_for_learning[columns_after_processing])
 
-    df_for_learning["sex"] = df_for_learning["sex_and_age"].map(lambda sex_and_age: sex_and_age[0])
-    df_for_learning["age"] = df_for_learning["sex_and_age"].map(lambda sex_and_age: sex_and_age[1:])
-    
-    df_for_learning["goal_time-1"] = df_for_learning["goal_time-1"].map(pp.to_seconds)
-    df_for_learning["goal_time-2"] = df_for_learning["goal_time-2"].map(pp.to_seconds)
-    df_for_learning["goal_time-3"] = df_for_learning["goal_time-3"].map(pp.to_seconds)
-    
-    df_for_learning["horse_weight"] = df_for_learning["horse_weight"].map(pp.extract_weight).astype(np.int64)
-    
-    df_for_learning["prize-1"] = df_for_learning["prize-1"].map(lambda prize: prize.replace(",", "") if type(prize) == str else prize).astype(np.float64)
-    df_for_learning["prize-2"] = df_for_learning["prize-2"].map(lambda prize: prize.replace(",", "") if type(prize) == str else prize).astype(np.float64)
-    df_for_learning["prize-3"] = df_for_learning["prize-3"].map(lambda prize: prize.replace(",", "") if type(prize) == str else prize).astype(np.float64)
-    
-    df_for_learning["kyakusitu-1"] = [pp.kyakusitu_code_c(n, r) for n, r in zip(df_for_learning["total_horse_number_x-1"].values, df_for_learning["half_way_rank-1"])]
-    df_for_learning["kyakusitu-2"] = [pp.kyakusitu_code_c(n, r) for n, r in zip(df_for_learning["total_horse_number_x-2"].values, df_for_learning["half_way_rank-2"])]
-    df_for_learning["kyakusitu-3"] = [pp.kyakusitu_code_c(n, r) for n, r in zip(df_for_learning["total_horse_number_x-3"].values, df_for_learning["half_way_rank-3"])]
-    
-    # 欠損値処理
-    df_for_learning = df_for_learning.replace('---', -1)
-    df_for_learning = df_for_learning.fillna(-1)
-
-    df_for_learning["odds"] = df_for_learning["odds"].astype(np.float64)
-    
     return df_for_learning
     
+def process_features(df_before_processing: pd.DataFrame) -> pd.DataFrame:
+    """
+    特徴量を加工
+        Parameters
+    ----------
+    df_before_processing : pandas.DataFrame
+        特徴量加工前のデータフレーム
     
+    Returns
+    -------
+    df_after_processing : pandas.DataFrame
+        特徴量加工後のデータフレーム
+    """
+    df_after_processing = df_before_processing[columns_before_processing]
+    df_after_processing ["where_racecourse"] = df_after_processing ["where_racecourse"].map(pp.extract_place)
+
+    df_after_processing["sex"] = df_after_processing["sex_and_age"].map(lambda sex_and_age: sex_and_age[0])
+    df_after_processing["age"] = df_after_processing["sex_and_age"].map(lambda sex_and_age: sex_and_age[1:])
+    
+    df_after_processing["goal_time-1"] = df_after_processing["goal_time-1"].map(pp.to_seconds)
+    df_after_processing["goal_time-2"] = df_after_processing["goal_time-2"].map(pp.to_seconds)
+    df_after_processing["goal_time-3"] = df_after_processing["goal_time-3"].map(pp.to_seconds)
+    
+    df_after_processing["horse_weight"] = df_after_processing["horse_weight"].map(pp.extract_weight).astype(np.int64)
+    
+    df_after_processing["prize-1"] = df_after_processing["prize-1"].map(
+        lambda prize: prize.replace(",", "") if type(prize) == str else prize).astype(np.float32)
+    df_after_processing["prize-2"] = df_after_processing["prize-2"].map(
+        lambda prize: prize.replace(",", "") if type(prize) == str else prize).astype(np.float32)
+    df_after_processing["prize-3"] = df_after_processing["prize-3"].map(
+        lambda prize: prize.replace(",", "") if type(prize) == str else prize).astype(np.float32)
+    
+    df_after_processing["kyakusitu-1"] = [pp.kyakusitu_code_c(n, r) 
+        for n, r in zip(df_after_processing["total_horse_number_x-1"].values, df_after_processing["half_way_rank-1"])]
+    df_after_processing["kyakusitu-2"] = [pp.kyakusitu_code_c(n, r) 
+        for n, r in zip(df_after_processing["total_horse_number_x-2"].values, df_after_processing["half_way_rank-2"])]
+    df_after_processing["kyakusitu-3"] = [pp.kyakusitu_code_c(n, r) 
+        for n, r in zip(df_after_processing["total_horse_number_x-3"].values, df_after_processing["half_way_rank-3"])]
+    
+    # 欠損値処理
+    df_after_processing = df_after_processing.replace('---', -1)
+    df_after_processing = df_after_processing.fillna(-1)
+
+    df_after_processing["odds"] = df_after_processing["odds"].astype(np.float32)
+    
+    return df_after_processing
