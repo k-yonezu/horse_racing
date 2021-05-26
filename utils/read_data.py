@@ -11,7 +11,7 @@ def read_horse_csv(path):
             df = pd.concat([df, pd.read_csv(path + '/' + file)])
     df = df.astype({'race_id': str})
     df = df.query('not race_id.str.contains("\(", na=False)', engine='python')
-    df = df.astype({'race_id': float, 'horse_id': int, 'popular': 'float16', 'burden_weight': 'float16', 'frame_number': 'int8', 'horse_number': 'int8', 'total_horse_number': 'int8', 'rider_id': 'int32', 'tamer_id': 'int32', 'last_time': 'float16'})
+    df = df.astype({'race_id': float, 'horse_id': int, 'popular': 'float16', 'burden_weight': 'float16', 'frame_number': 'int8', 'horse_number': 'int8', 'total_horse_number_x': 'int8', 'rider_id': 'int32', 'tamer_id': 'int32', 'last_time': 'float16'})
 
     return df.reset_index(drop=True)
 

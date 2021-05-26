@@ -5,6 +5,14 @@ import tensorflow as tf
 import numpy as np
 #from tqdm import tqdm
 
+def fill_missing_columns(df_a, df_b):
+    columns_for_b = set(df_a.columns) - set(df_b.columns)
+    for column in columns_for_b:
+        df_b[column] = 0
+
+    columns_for_a = set(df_b.columns) - set(df_a.columns)
+    for column in columns_for_a:
+        df_a[column] = 0
 
 def kyakusitu_code_c(horse_number,half_way_rank):
     # 欠損値の場合
