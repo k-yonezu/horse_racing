@@ -105,7 +105,7 @@ def process_features(df_before_processing: pd.DataFrame) -> pd.DataFrame:
     df_after_processing.loc[:, "where_racecourse"] = df_after_processing.loc[: ,"where_racecourse"].map(pp.extract_place)
 
     df_after_processing.loc[: ,"sex"] = df_after_processing.loc[: ,"sex_and_age"].map(lambda sex_and_age: sex_and_age[0])
-    df_after_processing.loc[: ,"age"] = df_after_processing.loc[: ,"sex_and_age"].map(lambda sex_and_age: sex_and_age[1:])
+    df_after_processing.loc[: ,"age"] = df_after_processing.loc[: ,"sex_and_age"].map(lambda sex_and_age: sex_and_age[1:]).astype(int)
     
     df_after_processing.loc[: ,"goal_time-1"] = df_after_processing.loc[: ,"goal_time-1"].map(pp.to_seconds)
     df_after_processing.loc[: ,"goal_time-2"] = df_after_processing.loc[: ,"goal_time-2"].map(pp.to_seconds)
