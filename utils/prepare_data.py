@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import utils.preprocessing as pp
+import utils.sampling_new_columns as sc
 
 # 学習に使用するカラム、過去データは3レース前までのデータを用いる
 # これらのカラムに対して加工を行う為、新たなカラムが加わる。
@@ -102,14 +103,14 @@ def process_features(df_before_processing: pd.DataFrame) -> pd.DataFrame:
         特徴量加工後のデータフレーム
     """
     df_after_processing = df_before_processing[columns_before_processing]
-    df_after_processing.loc[:, "where_racecourse"] = df_after_processing.loc[: ,"where_racecourse"].map(pp.extract_place)
+    df_after_processing.loc[:, "where_racecourse"] = df_after_processing.loc[: ,"where_racecourse"].map(sc.extract_place)
 
     df_after_processing.loc[: ,"sex"] = df_after_processing.loc[: ,"sex_and_age"].map(lambda sex_and_age: sex_and_age[0])
     df_after_processing.loc[: ,"age"] = df_after_processing.loc[: ,"sex_and_age"].map(lambda sex_and_age: sex_and_age[1:])
     
-    df_after_processing.loc[: ,"goal_time-1"] = df_after_processing.loc[: ,"goal_time-1"].map(pp.to_seconds)
-    df_after_processing.loc[: ,"goal_time-2"] = df_after_processing.loc[: ,"goal_time-2"].map(pp.to_seconds)
-    df_after_processing.loc[: ,"goal_time-3"] = df_after_processing.loc[: ,"goal_time-3"].map(pp.to_seconds)
+    df_after_processing.loc[: ,"goal_time-1"] = df_after_processing.loc[: ,"goal_time-1"].map(sc.to_seconds)
+    df_after_processing.loc[: ,"goal_time-2"] = df_after_processing.loc[: ,"goal_time-2"].map(sc.to_seconds)
+    df_after_processing.loc[: ,"goal_time-3"] = df_after_processing.loc[: ,"goal_time-3"].map(sc.to_seconds)
     
     df_after_processing.loc[: ,"horse_weight"] = df_after_processing.loc[: ,"horse_weight"].map(pp.extract_weight).astype(np.int64)
     
@@ -120,11 +121,11 @@ def process_features(df_before_processing: pd.DataFrame) -> pd.DataFrame:
     df_after_processing.loc[: ,"prize-3"] = df_after_processing.loc[: ,"prize-3"].map(
         lambda prize: prize.replace(",", "") if type(prize) == str else prize).astype(np.float32)
     
-    df_after_processing.loc[: ,"kyakusitu-1"] = [pp.kyakusitu_code_c(n, r) 
+    df_after_processing.loc[: ,"kyakusitu-1"] = [sc.kyakusitu_code_c(n, r) 
         for n, r in zip(df_after_processing.loc[: ,"total_horse_number_x-1"].values, df_after_processing.loc[: ,"half_way_rank-1"])]
-    df_after_processing.loc[: ,"kyakusitu-2"] = [pp.kyakusitu_code_c(n, r) 
+    df_after_processing.loc[: ,"kyakusitu-2"] = [sc.kyakusitu_code_c(n, r) 
         for n, r in zip(df_after_processing.loc[: ,"total_horse_number_x-2"].values, df_after_processing.loc[: ,"half_way_rank-2"])]
-    df_after_processing.loc[: ,"kyakusitu-3"] = [pp.kyakusitu_code_c(n, r) 
+    df_after_processing.loc[: ,"kyakusitu-3"] = [sc.kyakusitu_code_c(n, r) 
         for n, r in zip(df_after_processing.loc[: ,"total_horse_number_x-3"].values, df_after_processing.loc[: ,"half_way_rank-3"])]
     
     # 欠損値処理
