@@ -42,8 +42,9 @@ def prepare_train_data(raw_df: pd.DataFrame, use_default_make_label: bool = Fals
         df_for_learning.loc[: ,"rank-2"] = pp.make_label(df_for_learning.loc[: ,"rank-2"].values, df_for_learning.loc[: ,"total_horse_number_x-2"].values)
         df_for_learning.loc[: ,"rank-3"] = pp.make_label(df_for_learning.loc[: ,"rank-3"].values, df_for_learning.loc[: ,"total_horse_number_x-3"].values)
     # one-hotベクトル化
+    df_for_learning = df_for_learning[columns_after_processing+["label"]]
     if one_hot:
-        df_for_learning = pp.one_hot_encoding(df_for_learning[columns_after_processing+["label"]])
+        df_for_learning = pp.one_hot_encoding(df_for_learning)
 
     return df_for_learning
     
@@ -70,27 +71,29 @@ def prepare_data_for_prediction(df_for_prediction: pd.DataFrame, past_data_df: p
     
     Retures
     -------
-    df_after_processing : pandas.DataFrame
+    df_for_prediction : pandas.DataFrame
         加工済み予測用データ
     """
-    df_after_processing = process_features(df_for_prediction)
-    past_data_df = process_features(past_data_df)
+    process_features(df_for_prediction)
+    process_features(past_data_df)
     
     if use_default_make_label:
-        df_after_processing.loc[: ,"rank-1"] = pp.make_label(df_after_processing.loc[: ,"rank-1"].values, df_after_processing.loc[: ,"total_horse_number_x-1"].values)
-        df_after_processing.loc[: ,"rank-2"] = pp.make_label(df_after_processing.loc[: ,"rank-2"].values, df_after_processing.loc[: ,"total_horse_number_x-2"].values)
-        df_after_processing.loc[: ,"rank-3"] = pp.make_label(df_after_processing.loc[: ,"rank-3"].values, df_after_processing.loc[: ,"total_horse_number_x-3"].values)
+        df_for_prediction.loc[: ,"rank-1"] = pp.make_label(df_for_prediction.loc[: ,"rank-1"].values, df_for_prediction.loc[: ,"total_horse_number_x-1"].values)
+        df_for_prediction.loc[: ,"rank-2"] = pp.make_label(df_for_prediction.loc[: ,"rank-2"].values, df_for_prediction.loc[: ,"total_horse_number_x-2"].values)
+        df_for_prediction.loc[: ,"rank-3"] = pp.make_label(df_for_prediction.loc[: ,"rank-3"].values, df_for_prediction.loc[: ,"total_horse_number_x-3"].values)
         past_data_df.loc[: ,"rank-1"] = pp.make_label(past_data_df.loc[: ,"rank-1"].values, past_data_df.loc[: ,"total_horse_number_x-1"].values)
         past_data_df.loc[: ,"rank-2"] = pp.make_label(past_data_df.loc[: ,"rank-2"].values, past_data_df.loc[: ,"total_horse_number_x-2"].values)
         past_data_df.loc[: ,"rank-3"] = pp.make_label(past_data_df.loc[: ,"rank-3"].values, past_data_df.loc[: ,"total_horse_number_x-3"].values)
     
+    df_after_preprocessing = df_for_prediction[columns_after_processing]
+    past_data_df = past_data_df[columns_after_processing]
     if one_hot:
-        df_after_processing = pp.one_hot_encoding(df_after_processing[columns_after_processing])
-        past_data_df = pp.one_hot_encoding(past_data_df[columns_after_processing])
+        df_after_preprocessing = pp.one_hot_encoding(df_after_preprocessing)
+        past_data_df = pp.one_hot_encoding(past_data_df)
     
-    pp.fill_missing_columns(df_after_processing, past_data_df)
+    pp.fill_missing_columns(df_after_preprocessing, past_data_df)
     
-    return df_after_processing
+    return df_after_preprocessing
     
 def process_features(df: pd.DataFrame):
     """
