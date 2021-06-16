@@ -71,7 +71,7 @@ def prepare_data_for_prediction(df_for_prediction: pd.DataFrame, past_data_df: p
     
     Retures
     -------
-    df_for_prediction : pandas.DataFrame
+    df_after_preprocessing : pandas.DataFrame
         加工済み予測用データ
     """
     process_features(df_for_prediction)
@@ -98,19 +98,13 @@ def prepare_data_for_prediction(df_for_prediction: pd.DataFrame, past_data_df: p
 def process_features(df: pd.DataFrame):
     """
     特徴量を加工
-        Parameters
+    ※ DataFrameは参照渡しなので、引数で渡したデータへの変更は
+       関数での処理後も元データに残る
+        
+    Parameters
     ----------
     df : pandas.DataFrame
         特徴量を加工するデータフレーム
-        (DataFrameは参照渡しなので、引数で渡したデータへの変更は
-        関数での処理後も元データに残る)
-    
-    use_default_make_label : bool = False
-        デフォルトのmake_labelを使用するか
-        (現状はサンプルの多層NNで使う)
-    
-    one_hot : bool = True
-        one-hotエンコーディングを行うか
     
     Returns
     -------
