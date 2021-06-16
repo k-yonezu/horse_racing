@@ -130,6 +130,10 @@ def process_features(df_before_processing: pd.DataFrame) -> pd.DataFrame:
     """
     df_after_processing = df_before_processing[columns_before_processing]
     df_after_processing.loc[:, "where_racecourse"] = df_after_processing.loc[: ,"where_racecourse"].map(sc.extract_place)
+    
+    df_after_processing.loc[:, "race_class"] = df_after_processing.loc[:, "race_class"].map(sc.sampling_class)
+    
+    df_after_processing.loc[:, "race_grade"] = df_after_processing.apply(lambda row: sc.sampling_grade(row["race_title"], row["race_class"]), axis=1)
 
     df_after_processing.loc[: ,"sex"] = df_after_processing.loc[: ,"sex_and_age"].map(lambda sex_and_age: sex_and_age[0])
     df_after_processing.loc[: ,"age"] = df_after_processing.loc[: ,"sex_and_age"].map(lambda sex_and_age: sex_and_age[1:])
