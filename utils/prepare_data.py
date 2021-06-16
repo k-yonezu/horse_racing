@@ -3,8 +3,8 @@ import numpy as np
 import utils.preprocessing as pp
 import utils.sampling_new_columns as sc
 
-columns_after_processing = ["race_course", "weather", "ground_status", 
-                 "where_racecourse", "race_class", "running_condition", 
+columns_after_processing = ["weather", "ground_status", 
+                 "race_class", "running_condition", 
                  "race_grade", "race_generation", "race_distance",
                  "race_direction", 
                  "frame_number", "horse_number",
@@ -119,8 +119,8 @@ def process_features(df: pd.DataFrame) -> pd.DataFrame:
     df_after_processing.loc[:, "race_class"] = df_after_processing.loc[:, "race_class"].map(sc.sampling_class)    
     df_after_processing.loc[:, "race_grade"] = df_after_processing.apply(lambda row: sc.sampling_grade(row["race_title"], row["race_class"]), axis=1)
     df_after_processing.loc[:, "race_generation"] = df_after_processing.loc[:, "race_class"].map(sc.sampling_race_genaration)
-    df_after_processing.loc[:, "race_distance"] = df_after_processing.loc[:, "race_cource"].map(sc.sampling_distance)
-    df_after_processing.loc[:, "race_direction"] = df_after_processing.loc[:, "race_cource"].map(sc.sampling_direction)
+    df_after_processing.loc[:, "race_distance"] = df_after_processing.loc[:, "where_racecourse"].map(sc.sampling_distance)
+    df_after_processing.loc[:, "race_direction"] = df_after_processing.loc[:, "where_racecourse"].map(sc.sampling_direction)
 
     df_after_processing.loc[: ,"sex"] = df_after_processing.loc[: ,"sex_and_age"].map(lambda sex_and_age: sex_and_age[0])
     df_after_processing.loc[: ,"age"] = df_after_processing.loc[: ,"sex_and_age"].map(lambda sex_and_age: sex_and_age[1:])
