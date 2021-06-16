@@ -138,7 +138,7 @@ def process_features(df_before_processing: pd.DataFrame) -> pd.DataFrame:
     df_after_processing.loc[: ,"goal_time-2"] = df_after_processing.loc[: ,"goal_time-2"].map(sc.to_seconds)
     df_after_processing.loc[: ,"goal_time-3"] = df_after_processing.loc[: ,"goal_time-3"].map(sc.to_seconds)
     
-    df_after_processing.loc[: ,"horse_weight"] = df_after_processing.loc[: ,"horse_weight"].map(pp.extract_weight).astype(np.int64)
+    df_after_processing.loc[: ,"horse_weight"] = df_after_processing.loc[: ,"horse_weight"].map(sc.extract_weight).astype(np.int64)
     
     df_after_processing.loc[: ,"prize-1"] = df_after_processing.loc[: ,"prize-1"].map(
         lambda prize: prize.replace(",", "") if type(prize) == str else prize).astype(np.float32)
