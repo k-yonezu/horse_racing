@@ -74,28 +74,28 @@ def prepare_data_for_prediction(df_for_prediction: pd.DataFrame, past_data_df: p
     df_after_preprocessing : pandas.DataFrame
         加工済み予測用データ
     """
-    process_features(df_for_prediction)
-    process_features(past_data_df)
+    df_after_preprocessing = process_features(df_for_prediction)
+    past_data_df_after_preprocessing = process_features(past_data_df)
     
     if use_default_make_label:
-        df_for_prediction.loc[: ,"rank-1"] = pp.make_label(df_for_prediction.loc[: ,"rank-1"].values, df_for_prediction.loc[: ,"total_horse_number_x-1"].values)
-        df_for_prediction.loc[: ,"rank-2"] = pp.make_label(df_for_prediction.loc[: ,"rank-2"].values, df_for_prediction.loc[: ,"total_horse_number_x-2"].values)
-        df_for_prediction.loc[: ,"rank-3"] = pp.make_label(df_for_prediction.loc[: ,"rank-3"].values, df_for_prediction.loc[: ,"total_horse_number_x-3"].values)
-        past_data_df.loc[: ,"rank-1"] = pp.make_label(past_data_df.loc[: ,"rank-1"].values, past_data_df.loc[: ,"total_horse_number_x-1"].values)
-        past_data_df.loc[: ,"rank-2"] = pp.make_label(past_data_df.loc[: ,"rank-2"].values, past_data_df.loc[: ,"total_horse_number_x-2"].values)
-        past_data_df.loc[: ,"rank-3"] = pp.make_label(past_data_df.loc[: ,"rank-3"].values, past_data_df.loc[: ,"total_horse_number_x-3"].values)
+        df_after_preprocessing.loc[: ,"rank-1"] = pp.make_label(df_after_preprocessing.loc[: ,"rank-1"].values, df_after_preprocessing.loc[: ,"total_horse_number_x-1"].values)
+        df_after_preprocessing.loc[: ,"rank-2"] = pp.make_label(df_after_preprocessing.loc[: ,"rank-2"].values, df_after_preprocessing.loc[: ,"total_horse_number_x-2"].values)
+        df_after_preprocessing.loc[: ,"rank-3"] = pp.make_label(df_after_preprocessing.loc[: ,"rank-3"].values, df_after_preprocessing.loc[: ,"total_horse_number_x-3"].values)
+        past_data_df_after_preprocessing.loc[: ,"rank-1"] = pp.make_label(past_data_df_after_preprocessing.loc[: ,"rank-1"].values, past_data_df_after_preprocessing.loc[: ,"total_horse_number_x-1"].values)
+        past_data_df_after_preprocessing.loc[: ,"rank-2"] = pp.make_label(past_data_df_after_preprocessing.loc[: ,"rank-2"].values, past_data_df_after_preprocessing.loc[: ,"total_horse_number_x-2"].values)
+        past_data_df_after_preprocessing.loc[: ,"rank-3"] = pp.make_label(past_data_df_after_preprocessing.loc[: ,"rank-3"].values, past_data_df_after_preprocessing.loc[: ,"total_horse_number_x-3"].values)
     
-    df_after_preprocessing = df_for_prediction[columns_after_processing]
-    past_data_df = past_data_df[columns_after_processing]
+    df_after_preprocessing = df_after_preprocessing[columns_after_processing]
+    past_data_df_after_preprocessing = past_data_df_after_preprocessing[columns_after_processing]
     if one_hot:
         df_after_preprocessing = pp.one_hot_encoding(df_after_preprocessing)
-        past_data_df = pp.one_hot_encoding(past_data_df)
+        past_data_df_after_preprocessing = pp.one_hot_encoding(past_data_df_after_preprocessing)
     
-    pp.fill_missing_columns(df_after_preprocessing, past_data_df)
+    pp.fill_missing_columns(df_after_preprocessing, past_data_df_after_preprocessing)
     
     return df_after_preprocessing
     
-def process_features(df: pd.DataFrame):
+def process_features(df: pd.DataFrame) -> pd.DataFrame:
     """
     特徴量を加工
     ※ DataFrameは参照渡しなので、引数で渡したデータへの変更は
@@ -108,38 +108,43 @@ def process_features(df: pd.DataFrame):
     
     Returns
     -------
+    df_after_processing: pandas.DataFrame
+        特徴量加工後のデータフレーム
     """
-    df.loc[:, "where_racecourse"] = df.loc[: ,"where_racecourse"].map(sc.extract_place)
+    df_after_processing = df
+    df_after_processing.loc[:, "where_racecourse"] = df_after_processing.loc[: ,"where_racecourse"].map(sc.extract_place)
     
-    df.loc[:, "race_class"] = df.loc[:, "race_class"].map(sc.sampling_class)
+    df_after_processing.loc[:, "race_class"] = df_after_processing.loc[:, "race_class"].map(sc.sampling_class)
     
-    df.loc[:, "race_grade"] = df.apply(lambda row: sc.sampling_grade(row["race_title"], row["race_class"]), axis=1)
+    df_after_processing.loc[:, "race_grade"] = df_after_processing.apply(lambda row: sc.sampling_grade(row["race_title"], row["race_class"]), axis=1)
 
-    df.loc[: ,"sex"] = df.loc[: ,"sex_and_age"].map(lambda sex_and_age: sex_and_age[0])
-    df.loc[: ,"age"] = df.loc[: ,"sex_and_age"].map(lambda sex_and_age: sex_and_age[1:])
+    df_after_processing.loc[: ,"sex"] = df_after_processing.loc[: ,"sex_and_age"].map(lambda sex_and_age: sex_and_age[0])
+    df_after_processing.loc[: ,"age"] = df_after_processing.loc[: ,"sex_and_age"].map(lambda sex_and_age: sex_and_age[1:])
     
-    df.loc[: ,"goal_time-1"] = df.loc[: ,"goal_time-1"].map(sc.to_seconds)
-    df.loc[: ,"goal_time-2"] = df.loc[: ,"goal_time-2"].map(sc.to_seconds)
-    df.loc[: ,"goal_time-3"] = df.loc[: ,"goal_time-3"].map(sc.to_seconds)
+    df_after_processing.loc[: ,"goal_time-1"] = df_after_processing.loc[: ,"goal_time-1"].map(sc.to_seconds)
+    df_after_processing.loc[: ,"goal_time-2"] = df_after_processing.loc[: ,"goal_time-2"].map(sc.to_seconds)
+    df_after_processing.loc[: ,"goal_time-3"] = df_after_processing.loc[: ,"goal_time-3"].map(sc.to_seconds)
     
-    df.loc[: ,"horse_weight"] = df.loc[: ,"horse_weight"].map(sc.extract_weight).astype(np.int64)
+    df_after_processing.loc[: ,"horse_weight"] = df_after_processing.loc[: ,"horse_weight"].map(sc.extract_weight).astype(np.int64)
     
-    df.loc[: ,"prize-1"] = df.loc[: ,"prize-1"].map(
+    df_after_processing.loc[: ,"prize-1"] = df_after_processing.loc[: ,"prize-1"].map(
         lambda prize: prize.replace(",", "") if type(prize) == str else prize).astype(np.float32)
-    df.loc[: ,"prize-2"] = df.loc[: ,"prize-2"].map(
+    df_after_processing.loc[: ,"prize-2"] = df_after_processing.loc[: ,"prize-2"].map(
         lambda prize: prize.replace(",", "") if type(prize) == str else prize).astype(np.float32)
-    df.loc[: ,"prize-3"] = df.loc[: ,"prize-3"].map(
+    df_after_processing.loc[: ,"prize-3"] = df_after_processing.loc[: ,"prize-3"].map(
         lambda prize: prize.replace(",", "") if type(prize) == str else prize).astype(np.float32)
     
-    df.loc[: ,"kyakusitu-1"] = [sc.kyakusitu_code_c(n, r) 
-        for n, r in zip(df.loc[: ,"total_horse_number_x-1"].values, df.loc[: ,"half_way_rank-1"])]
-    df.loc[: ,"kyakusitu-2"] = [sc.kyakusitu_code_c(n, r) 
-        for n, r in zip(df.loc[: ,"total_horse_number_x-2"].values, df.loc[: ,"half_way_rank-2"])]
-    df.loc[: ,"kyakusitu-3"] = [sc.kyakusitu_code_c(n, r) 
-        for n, r in zip(df.loc[: ,"total_horse_number_x-3"].values, df.loc[: ,"half_way_rank-3"])]
+    df_after_processing.loc[: ,"kyakusitu-1"] = [sc.kyakusitu_code_c(n, r) 
+        for n, r in zip(df_after_processing.loc[: ,"total_horse_number_x-1"].values, df_after_processing.loc[: ,"half_way_rank-1"])]
+    df_after_processing.loc[: ,"kyakusitu-2"] = [sc.kyakusitu_code_c(n, r) 
+        for n, r in zip(df_after_processing.loc[: ,"total_horse_number_x-2"].values, df_after_processing.loc[: ,"half_way_rank-2"])]
+    df_after_processing.loc[: ,"kyakusitu-3"] = [sc.kyakusitu_code_c(n, r) 
+        for n, r in zip(df_after_processing.loc[: ,"total_horse_number_x-3"].values, df_after_processing.loc[: ,"half_way_rank-3"])]
     
     # 欠損値処理
-    df = df.replace('---', -1)
-    df = df.fillna(-1)
+    df_after_processing = df_after_processing.replace('---', -1)
+    df_after_processing = df_after_processing.fillna(-1)
 
-    df.loc[: ,"odds"] = df.loc[: ,"odds"].astype(np.float32)
+    df_after_processing.loc[: ,"odds"] = df_after_processing.loc[: ,"odds"].astype(np.float32)
+    
+    return df_after_processing
