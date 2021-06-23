@@ -1,5 +1,6 @@
 import pandas as pd
 import tensorflow as tf
+import datetime
 import numpy as np
 from sklearn.model_selection import train_test_split
 import re
@@ -98,7 +99,7 @@ def sampling_direction(race_course):
     """
     if type(race_course) != str:
         return race_course
-    
+
     if "障" in race_course:
         race_direction="障"
     elif "右" in race_course:
