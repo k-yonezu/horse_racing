@@ -149,6 +149,8 @@ def process_features(df: pd.DataFrame) -> pd.DataFrame:
     df_after_processing = df_after_processing.replace('---', -1)
     df_after_processing = df_after_processing.fillna(-1)
 
-    df_after_processing.loc[: ,"odds"] = df_after_processing.loc[: ,"odds"].astype(np.float32)
+    df_after_processing.loc[: ,"odds-1"] = df_after_processing.loc[: ,"odds-1"].astype(np.float32)
+    df_after_processing.loc[: ,"odds-2"] = df_after_processing.loc[: ,"odds-2"].astype(np.float32)
+    df_after_processing.loc[: ,"odds-3"] = df_after_processing.loc[: ,"odds-3"].astype(np.float32)
     
     return df_after_processing
