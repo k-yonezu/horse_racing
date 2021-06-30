@@ -8,11 +8,13 @@ columns_after_processing = ["weather",
                  "race_direction", 
                  "frame_number", "horse_number",
                  "sex", "age", "burden_weight", "rider_id", 
-                 "tamer_id", "horse_weight", "popular",
-                 "rank-1", "rank-2", "rank-3", "odds", 
+                 "tamer_id", "horse_weight",
+                 "rank-1", "rank-2", "rank-3", 
                  "goal_time-1", "goal_time-2", "goal_time-3",
                  "last_time-1", "last_time-2", "last_time-3", 
                  "kyakusitu-1", "kyakusitu-2", "kyakusitu-3", 
+                 "odds-1", "odds-2", "odds-3",
+                 "popular-1", "popular-2", "popular-3", 
                  "prize-1", "prize-2", "prize-3"]
 
 def prepare_train_data(raw_df: pd.DataFrame, use_default_make_label: bool = False, one_hot: bool = True) -> pd.DataFrame:
@@ -147,6 +149,8 @@ def process_features(df: pd.DataFrame) -> pd.DataFrame:
     df_after_processing = df_after_processing.replace('---', -1)
     df_after_processing = df_after_processing.fillna(-1)
 
-    df_after_processing.loc[: ,"odds"] = df_after_processing.loc[: ,"odds"].astype(np.float32)
+    df_after_processing.loc[: ,"odds-1"] = df_after_processing.loc[: ,"odds-1"].astype(np.float32)
+    df_after_processing.loc[: ,"odds-2"] = df_after_processing.loc[: ,"odds-2"].astype(np.float32)
+    df_after_processing.loc[: ,"odds-3"] = df_after_processing.loc[: ,"odds-3"].astype(np.float32)
     
     return df_after_processing
