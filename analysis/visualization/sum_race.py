@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # data.csvは, rbind_data.csvから余計なrbindを除去したもの
+# 各自パスを変える
 data = pd.read_csv("/Users/nawajieita/Desktop/data.csv")
 data = pd.DataFrame(data.iloc[:,1:])
 
