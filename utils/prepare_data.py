@@ -4,8 +4,8 @@ import utils.preprocessing as pp
 import utils.sampling_new_columns as sc
 
 columns_after_processing = ["weather", 
-                 "race_class", "race_grade", "race_generation", "race_distance",
-                 "race_direction", 
+                 "race_grade", "race_generation", "race_distance",
+                 "race_direction", "ground_status",
                  "frame_number", "horse_number",
                  "sex", "age", "burden_weight", "rider_id", 
                  "tamer_id", "horse_weight",
