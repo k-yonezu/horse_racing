@@ -21,7 +21,7 @@ def tansyo_ret(target_ranks: np.array, predicted_ranks: np.array, tansyo: np.arr
     
     return is_hit, ret
 
-def hukusyo_ret():
+def hukusyo_ret(target_ranks: np.array, predicted_ranks: np.array, tansyo: np.array) -> Tuple[float, float]:
     return 0
 
 def top_1_box(race_horse_df: pd.DataFrame, predicted_ranks_df: pd.DataFrame):
