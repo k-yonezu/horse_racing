@@ -55,8 +55,23 @@ class Test(unittest.TestCase):
         is_hit, ret = hukusyo_ret(target_ranks, predicted_ranks, hukusyo_prize)
         self.assertFalse(is_hit)
         self.assertEqual(ret, 0)
+        
+        # 7頭以下の場合 (2着までが的中)
+        # 予測が当たっている場合
+        target_ranks = np.array([1, 2, 3, 4, 5, 6, 7])
+        predicted_ranks = np.array([2, 1, 4, 5, 6, 3, 7])
+        hukusyo_prize = np.array([300 for _ in range(len(predicted_ranks))])
+        is_hit, ret = hukusyo_ret(target_ranks, predicted_ranks, hukusyo_prize)
+        self.assertFalse(is_hit)
+        self.assertEqual(ret, 200)
+        # 予測が当たっていない場合
+        target_ranks = np.array([1, 2, 3, 4, 5, 6, 7])
+        predicted_ranks = np.array([2, 3, 1, 5, 6, 3, 7])
+        hukusyo_prize = np.array([300 for _ in range(len(predicted_ranks))])
+        is_hit, ret = hukusyo_ret(target_ranks, predicted_ranks, hukusyo_prize)
+        self.assertFalse(is_hit)
+        self.assertEqual(ret, 200)
             
-    
     
 if __name__ == "__main__":
     unittest.main()
