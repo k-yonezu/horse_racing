@@ -15,7 +15,7 @@ def tansyo_ret(target_ranks: np.array, predicted_ranks: np.array, tansyo: np.arr
     is_hit = predicted_ranks[index_of_top_horse] == 1
     
     if is_hit:
-        ret = int(tansyo[index_of_top_horse])
+        ret = int(tansyo[index_of_top_horse]) - PRICE_OF_BETTING_TICKET
     else:
         ret = 0
     
