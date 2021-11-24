@@ -7,22 +7,37 @@ PRICE_OF_BETTING_TICKET = 100
 def extract_race(horse_race_df, race_id):
     return horse_race_df[horse_race_df["race_id"] == race_id]
 
-def tansyo_ret(target_ranks: np.array, predicted_ranks: np.array, tansyo: np.array) -> Tuple[float, float]:
+# n: n-box を引数にとり任意のboxに対応させる(top-5まで、5より大きい場合は警告を出す)
+def tansyo_ret(target_ranks: np.array, predicted_ranks: np.array, tansyo_prize: np.array) -> Tuple[int, float]:
     if target_ranks.dtype != np.int32:
         raise "target_ranks.dtype must be np.int32"
     
     index_of_top_horse = target_ranks == 1
-    is_hit = predicted_ranks[index_of_top_horse] == 1
+    num_hit = (predicted_ranks[index_of_top_horse] == 1).sum()
     
-    if is_hit:
-        ret = int(tansyo[index_of_top_horse]) - PRICE_OF_BETTING_TICKET
+    if num_hit > 0:
+        ret = int(tansyo_prize[index_of_top_horse]) - PRICE_OF_BETTING_TICKET
     else:
         ret = 0
     
-    return is_hit, ret
+    return num_hit, ret
 
-def hukusyo_ret(target_ranks: np.array, predicted_ranks: np.array, tansyo: np.array) -> Tuple[float, float]:
-    return 0
+def hukusyo_ret(target_ranks: np.array, predicted_ranks: np.array, hukusyo_prize: np.array) -> Tuple[int, float]:
+    if target_ranks.dtype != np.int32:
+        raise "target_ranks.dtype must be np.int32"
+    
+    index_of_predicted_top_horse = predicted_ranks == 1
+    if len(target_ranks) > 7:
+        num_hit = (target_ranks[index_of_predicted_top_horse] <= 3).sum()
+    else:
+        num_hit = (target_ranks[index_of_predicted_top_horse] <= 2).sum()
+    
+    if num_hit > 0:
+        ret = int(hukusyo_prize[index_of_predicted_top_horse]) - PRICE_OF_BETTING_TICKET
+    else:
+        ret = 0
+    
+    return num_hit, ret
 
 def top_1_box(race_horse_df: pd.DataFrame, predicted_ranks_df: pd.DataFrame):
     stats = {"tansyo": {"correct_rate": 0, "ret_rate": 0, "ret_std": 0, "hit_list": [], "ret_list": [], "total_hit": 0, "total_ret": 0}}
