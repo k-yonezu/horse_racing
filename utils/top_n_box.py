@@ -9,8 +9,10 @@ def extract_race(horse_race_df, race_id):
 
 # n: n-box を引数にとり任意のboxに対応させる(top-5まで、5より大きい場合は警告を出す)
 def tansyo_ret(target_ranks: np.array, predicted_ranks: np.array, tansyo_prize: np.array) -> Tuple[int, float]:
-    if target_ranks.dtype != np.int32:
-        raise "target_ranks.dtype must be np.int32"
+    if target_ranks.dtype.type != np.int64:
+        error_message = f"target_ranks.dtype is {target_ranks.dtype}, but target_ranks.dtype must be np.int32"
+        print(error_message)
+        raise error_message
     
     index_of_top_horse = target_ranks == 1
     num_hit = (predicted_ranks[index_of_top_horse] == 1).sum()
@@ -23,8 +25,10 @@ def tansyo_ret(target_ranks: np.array, predicted_ranks: np.array, tansyo_prize: 
     return num_hit, ret
 
 def hukusyo_ret(target_ranks: np.array, predicted_ranks: np.array, hukusyo_prize: np.array) -> Tuple[int, float]:
-    if target_ranks.dtype != np.int32:
-        raise "target_ranks.dtype must be np.int32"
+    if target_ranks.dtype.type != np.int64:
+        error_message = f"target_ranks.dtype is {target_ranks.dtype}, but target_ranks.dtype must be np.int32"
+        print(error_message)
+        raise error_message
     
     index_of_predicted_top_horse = predicted_ranks == 1
     if len(target_ranks) > 7:
