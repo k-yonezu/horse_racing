@@ -60,6 +60,7 @@ class TopNBox(PurchasingStrategy):
 
     def wide(self):
         tickets = self.umaren()
+        return tickets
 
     def sanrempuku(self):
         return []
