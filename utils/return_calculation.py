@@ -22,6 +22,72 @@ def fukusho(tickets, target_ranks, prizes):
     ret = 0
     for ticket in tickets:
         rank = target_ranks[ticket][0]
+        if rank == 1 or rank == 2:
+            num_hit += 1
+            ret += prizes[ticket][0] - PRICE_OF_BETTING_TICKET
+        else:
+            ret -= PRICE_OF_BETTING_TICKET
+    return num_hit, ret
+
+def wakuren(tickets, target_ranks, prizes):
+    raise NotImplementedError()
+
+def umaren(tickets, target_ranks, prizes):
+    num_hit = 0
+    ret = 0
+    for ticket in tickets:
+        rank = target_ranks[ticket]
+        if rank[0] in [1, 2] and rank[1] in [1, 2]:
+            num_hit += 1
+            ret += prizes[ticket][0] - PRICE_OF_BETTING_TICKET
+        else:
+            ret -= PRICE_OF_BETTING_TICKET
+    return num_hit, ret
+
+def umatan(tickets, target_ranks, prizes):
+    num_hit = 0
+    ret = 0
+    for ticket in tickets:
+        rank = target_ranks[ticket][0]
+        print(rank)
+        if rank == 1 or rank == 2:
+            num_hit += 1
+            ret += prizes[ticket][0] - PRICE_OF_BETTING_TICKET
+        else:
+            ret -= PRICE_OF_BETTING_TICKET
+    return num_hit, ret
+
+def wide(tickets, target_ranks, prizes):
+    num_hit = 0
+    ret = 0
+    for ticket in tickets:
+        rank = target_ranks[ticket][0]
+        print(rank)
+        if rank == 1 or rank == 2:
+            num_hit += 1
+            ret += prizes[ticket][0] - PRICE_OF_BETTING_TICKET
+        else:
+            ret -= PRICE_OF_BETTING_TICKET
+    return num_hit, ret
+
+def sanrempuku(tickets, target_ranks, prizes):
+    num_hit = 0
+    ret = 0
+    for ticket in tickets:
+        rank = target_ranks[ticket][0]
+        print(rank)
+        if rank == 1 or rank == 2:
+            num_hit += 1
+            ret += prizes[ticket][0] - PRICE_OF_BETTING_TICKET
+        else:
+            ret -= PRICE_OF_BETTING_TICKET
+    return num_hit, ret
+
+def sanrentan(tickets, target_ranks, prizes):
+    num_hit = 0
+    ret = 0
+    for ticket in tickets:
+        rank = target_ranks[ticket][0]
         print(rank)
         if rank == 1 or rank == 2:
             num_hit += 1
@@ -36,9 +102,9 @@ if __name__ == "__main__":
     target_ranks = np.array([1, 2, 3, 4, 5, 6])
     prizes = np.array([500, 500, 500, 500, 500])
     top_n_box = TopNBox(predicted_ranks, 4)
-    for t in ["fukusho"]:#TopNBox.ticket_types:
+    for t in ["umaren"]:#TopNBox.ticket_types:
         tickets = top_n_box.output_tickets(t)
-        num_hit, ret = fukusho(tickets, target_ranks, prizes)
+        num_hit, ret = umaren(tickets, target_ranks, prizes)
         print(f"-----ticket type: {t}------")
         print("predicted ranks:", predicted_ranks)
         print("prizes:", prizes)
