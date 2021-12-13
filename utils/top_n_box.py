@@ -1,6 +1,7 @@
 import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+import itertools
 import numpy as np
 from utils.purchasing_strategy import PurchasingStrategy
 
@@ -26,7 +27,20 @@ class TopNBox(PurchasingStrategy):
         return []
 
     def umaren(self):
-        return []
+        if self.n < 2:
+            raise "Error: n must be bigger than 1."
+        top_n = []
+        for i in range(1, self.n+1):
+            index = np.where(self.predicted_ranks == i)
+            # index => (array([something...]), ) 
+            # index[0] => array[something...]
+            # index[0][0] => something
+            top_n.append(index[0][0])
+        tickets = []
+        for ticket in itertools.combinations(top_n, 2):
+            tickets.append(np.array(ticket))
+
+        return tickets
 
     def umatan(self):
         return []
@@ -42,7 +56,8 @@ class TopNBox(PurchasingStrategy):
 
 if __name__ == "__main__":
     predicted_ranks = np.array([1, 3, 4, 2, 5, 6])
-    top_n_box = TopNBox(predicted_ranks, 2)
+    top_n_box = TopNBox(predicted_ranks, 3)
     for t in TopNBox.ticket_types:
-        print(t)
-        print(top_n_box.output_tickets(t))
+        print(f"-----ticket type: {t}------")
+        print("predicted ranks:", predicted_ranks)
+        print("tickets: ", top_n_box.output_tickets(t))
