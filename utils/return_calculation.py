@@ -22,7 +22,7 @@ def fukusho(tickets, target_ranks, prizes):
     ret = 0
     for ticket in tickets:
         rank = target_ranks[ticket][0]
-        if rank == 1 or rank == 2:
+        if rank == 1 or rank == 2 or rank == 3:
             num_hit += 1
             ret += prizes[ticket][0] - PRICE_OF_BETTING_TICKET
         else:
