@@ -43,10 +43,23 @@ class TopNBox(PurchasingStrategy):
         return tickets
 
     def umatan(self):
-        return []
+        if self.n < 2:
+            raise "Error: n must be bigger than 1."
+        top_n = []
+        for i in range(1, self.n+1):
+            index = np.where(self.predicted_ranks == i)
+            # index => (array([something...]), ) 
+            # index[0] => array[something...]
+            # index[0][0] => something
+            top_n.append(index[0][0])
+        tickets = []
+        for ticket in itertools.permutations(top_n, 2):
+            tickets.append(np.array(ticket))
+
+        return tickets
 
     def wide(self):
-        return []
+        tickets = self.umaren()
 
     def sanrempuku(self):
         return []
