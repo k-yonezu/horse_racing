@@ -63,14 +63,27 @@ class TopNBox(PurchasingStrategy):
         return tickets
 
     def sanrempuku(self):
-        return []
+        if self.n < 3:
+            raise "Error: n must be bigger than 2."
+        top_n = []
+        for i in range(1, self.n+1):
+            index = np.where(self.predicted_ranks == i)
+            # index => (array([something...]), ) 
+            # index[0] => array[something...]
+            # index[0][0] => something
+            top_n.append(index[0][0])
+        tickets = []
+        for ticket in itertools.combinations(top_n, 3):
+            tickets.append(np.array(ticket))
+
+        return tickets
 
     def sanrentan(self):
         return []
 
 if __name__ == "__main__":
     predicted_ranks = np.array([1, 3, 4, 2, 5, 6])
-    top_n_box = TopNBox(predicted_ranks, 3)
+    top_n_box = TopNBox(predicted_ranks, 4)
     for t in TopNBox.ticket_types:
         print(f"-----ticket type: {t}------")
         print("predicted ranks:", predicted_ranks)
