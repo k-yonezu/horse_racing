@@ -3,8 +3,6 @@ import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 import numpy as np
 
-PRICE_OF_BETTING_TICKET = 100
-
 def tansho(tickets, target_ranks, prizes):
     num_hit = 0
     ret = 0
@@ -12,9 +10,8 @@ def tansho(tickets, target_ranks, prizes):
         rank = target_ranks[ticket][0]
         if rank == 1:
             num_hit += 1
-            ret += prizes[ticket][0] - PRICE_OF_BETTING_TICKET
-        else:
-            ret -= PRICE_OF_BETTING_TICKET
+            ret += prizes[ticket][0]
+            
     return num_hit, ret
 
 def fukusho(tickets, target_ranks, prizes):
@@ -24,9 +21,8 @@ def fukusho(tickets, target_ranks, prizes):
         rank = target_ranks[ticket][0]
         if rank == 1 or rank == 2 or rank == 3:
             num_hit += 1
-            ret += prizes[ticket][0] - PRICE_OF_BETTING_TICKET
-        else:
-            ret -= PRICE_OF_BETTING_TICKET
+            ret += prizes[ticket][0] 
+
     return num_hit, ret
 
 def wakuren(tickets, target_ranks, prizes):
@@ -39,9 +35,8 @@ def umaren(tickets, target_ranks, prizes):
         rank = target_ranks[ticket]
         if rank[0] in [1, 2] and rank[1] in [1, 2]:
             num_hit += 1
-            ret += prizes[ticket][0] - PRICE_OF_BETTING_TICKET
-        else:
-            ret -= PRICE_OF_BETTING_TICKET
+            ret += prizes[ticket][0] 
+
     return num_hit, ret
 
 def umatan(tickets, target_ranks, prizes):
@@ -51,9 +46,8 @@ def umatan(tickets, target_ranks, prizes):
         rank = target_ranks[ticket]
         if rank[0] == 1 and rank[1] == 2:
             num_hit += 1
-            ret += prizes[ticket][0] - PRICE_OF_BETTING_TICKET
-        else:
-            ret -= PRICE_OF_BETTING_TICKET
+            ret += prizes[ticket][0] 
+
     return num_hit, ret
 
 def wide(tickets, target_ranks, prizes):
@@ -63,12 +57,11 @@ def wide(tickets, target_ranks, prizes):
         rank = target_ranks[ticket]
         # 3着が同着の場合は、3着・3着の組合せは不的中
         if rank[0] == 3 and rank[1] == 3:
-            ret -= PRICE_OF_BETTING_TICKET
+            ret = 0
         elif rank[0] in [1, 2, 3] and rank[1] in [1, 2, 3]:
             num_hit += 1
-            ret += prizes[ticket][0] - PRICE_OF_BETTING_TICKET
-        else:
-            ret -= PRICE_OF_BETTING_TICKET
+            ret += prizes[ticket][0] 
+
     return num_hit, ret
 
 def sanrempuku(tickets, target_ranks, prizes):
@@ -78,9 +71,8 @@ def sanrempuku(tickets, target_ranks, prizes):
         rank = target_ranks[ticket]
         if rank[0] in [1, 2, 3] and rank[1] in [1, 2, 3] and rank[2] in [1, 2, 3]:
             num_hit += 1
-            ret += prizes[ticket][0] - PRICE_OF_BETTING_TICKET
-        else:
-            ret -= PRICE_OF_BETTING_TICKET
+            ret += prizes[ticket][0] 
+
     return num_hit, ret
 
 def sanrentan(tickets, target_ranks, prizes):
@@ -90,9 +82,8 @@ def sanrentan(tickets, target_ranks, prizes):
         rank = target_ranks[ticket]
         if rank[0] == 1 and rank[1] == 2 and rank[2] == 3:
             num_hit += 1
-            ret += prizes[ticket][0] - PRICE_OF_BETTING_TICKET
-        else:
-            ret -= PRICE_OF_BETTING_TICKET
+            ret += prizes[ticket][0] 
+
     return num_hit, ret
 
 if __name__ == "__main__":
