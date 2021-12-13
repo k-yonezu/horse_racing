@@ -3,7 +3,6 @@ from abc import *
 class PurchasingStrategy:
     def __init__(self, predicted_ranks):
         self.predicted_ranks = predicted_ranks
-        pass
 
     def output_tickets(self, ticket_type):
         tickets = []
