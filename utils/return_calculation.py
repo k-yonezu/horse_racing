@@ -75,9 +75,8 @@ def sanrempuku(tickets, target_ranks, prizes):
     num_hit = 0
     ret = 0
     for ticket in tickets:
-        rank = target_ranks[ticket][0]
-        print(rank)
-        if rank == 1 or rank == 2:
+        rank = target_ranks[ticket]
+        if rank[0] in [1, 2, 3] and rank[1] in [1, 2, 3] and rank[2] in [1, 2, 3]:
             num_hit += 1
             ret += prizes[ticket][0] - PRICE_OF_BETTING_TICKET
         else:
@@ -90,7 +89,7 @@ def sanrentan(tickets, target_ranks, prizes):
     for ticket in tickets:
         rank = target_ranks[ticket][0]
         print(rank)
-        if rank == 1 or rank == 2:
+        if rank[0] in [1, 2, 3] and rank[1] in [1, 2, 3] and rank[2] in [1, 2, 3]:
             num_hit += 1
             ret += prizes[ticket][0] - PRICE_OF_BETTING_TICKET
         else:
@@ -103,9 +102,9 @@ if __name__ == "__main__":
     target_ranks = np.array([1, 2, 3, 4, 5, 6])
     prizes = np.array([500, 500, 500, 500, 500])
     top_n_box = TopNBox(predicted_ranks, 4)
-    for t in ["wide"]:#TopNBox.ticket_types:
+    for t in ["sanrempuku"]:#TopNBox.ticket_types:
         tickets = top_n_box.output_tickets(t)
-        num_hit, ret = wide(tickets, target_ranks, prizes)
+        num_hit, ret = sanrempuku(tickets, target_ranks, prizes)
         print(f"-----ticket type: {t}------")
         print("predicted ranks:", predicted_ranks)
         print("prizes:", prizes)
