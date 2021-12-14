@@ -67,11 +67,11 @@ def wide(tickets, target_ranks, first_second_prize, first_third_prize, second_th
             num_hit += 1
             ret += first_second_prize
         # 1着, 3着
-        elif (rank[0] == 1 and rank[2] == 3) or (rank[0] == 3 and rank[2] == 1):
+        elif (rank[0] == 1 and rank[1] == 3) or (rank[0] == 3 and rank[1] == 1):
             num_hit += 1
             ret += first_third_prize
         # 2着, 3着
-        elif (rank[1] == 2 and rank[2] == 3) or (rank[1] == 3 and rank[2] == 2):
+        elif (rank[0] == 2 and rank[1] == 3) or (rank[0] == 3 and rank[1] == 2):
             num_hit += 1
             ret += second_third_prize
 

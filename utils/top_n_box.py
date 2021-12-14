@@ -96,7 +96,7 @@ class TopNBox(PurchasingStrategy):
 
 if __name__ == "__main__":
     predicted_ranks = np.array([1, 3, 4, 2, 5, 6])
-    top_n_box = TopNBox(predicted_ranks, 4)
+    top_n_box = TopNBox(predicted_ranks, 2)
     for t in TopNBox.ticket_types:
         print(f"-----ticket type: {t}------")
         print("predicted ranks:", predicted_ranks)

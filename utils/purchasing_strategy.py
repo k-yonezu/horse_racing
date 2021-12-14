@@ -4,7 +4,6 @@ class PurchasingStrategy:
     ticket_types = [
         "tansho", 
         "fukusho", 
-        "wakuren", 
         "umaren", 
         "umatan", 
         "wide", 
@@ -21,16 +20,14 @@ class PurchasingStrategy:
         elif ticket_type == self.ticket_types[1]:
             tickets = self.fukusho()
         elif ticket_type == self.ticket_types[2]:
-            tickets = self.wakuren()
-        elif ticket_type == self.ticket_types[3]:
             tickets = self.umaren()
-        elif ticket_type == self.ticket_types[4]:
+        elif ticket_type == self.ticket_types[3]:
             tickets = self.umatan()
-        elif ticket_type == self.ticket_types[5]:
+        elif ticket_type == self.ticket_types[4]:
             tickets = self.wide()
-        elif ticket_type == self.ticket_types[6]:
+        elif ticket_type == self.ticket_types[5]:
             tickets = self.sanrempuku()
-        elif ticket_type == self.ticket_types[7]:
+        elif ticket_type == self.ticket_types[6]:
             tickets = self.sanrentan()
         
         return tickets
