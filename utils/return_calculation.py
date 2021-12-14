@@ -14,14 +14,20 @@ def tansho(tickets, target_ranks, prizes):
             
     return num_hit, ret
 
-def fukusho(tickets, target_ranks, prizes):
+def fukusho(tickets, target_ranks, first_prizes, second_prizes, third_prizes):
     num_hit = 0
     ret = 0
     for ticket in tickets:
         rank = target_ranks[ticket][0]
-        if rank == 1 or rank == 2 or rank == 3:
+        if rank == 1:
             num_hit += 1
-            ret += prizes[ticket][0] 
+            ret += first_prizes[ticket][0] 
+        elif rank == 2:
+            num_hit += 1
+            ret += second_prizes[ticket][0] 
+        elif rank == 3:
+            num_hit += 1
+            ret += third_prizes[ticket][0]             
 
     return num_hit, ret
 
@@ -50,17 +56,24 @@ def umatan(tickets, target_ranks, prizes):
 
     return num_hit, ret
 
-def wide(tickets, target_ranks, prizes):
+def wide(tickets, target_ranks, first_second_prizes, first_third_prizes, second_third_prizes):
     num_hit = 0
     ret = 0
     for ticket in tickets:
         rank = target_ranks[ticket]
-        # 3着が同着の場合は、3着・3着の組合せは不的中
-        if rank[0] == 3 and rank[1] == 3:
-            ret = 0
-        elif rank[0] in [1, 2, 3] and rank[1] in [1, 2, 3]:
+
+        # 1着, 2着
+        if (rank[0] == 1 and rank[1] == 2) or (rank[0] == 2 and rank[1] == 1)
             num_hit += 1
-            ret += prizes[ticket][0] 
+            ret += first_second_prizes[ticket][0]
+        # 1着, 3着
+        elif (rank[0] == 1 and rank[2] == 3) or (rank[0] == 3 and rank[2] == 1)
+            num_hit += 1
+            ret += first_third_prizes[ticket][0]
+        # 2着, 3着
+        elif (rank[1] == 2 and rank[2] == 3) or (rank[1] == 3 and rank[2] == 2)
+            num_hit += 1
+            ret += second_third_prizes[ticket][0]
 
     return num_hit, ret
 
