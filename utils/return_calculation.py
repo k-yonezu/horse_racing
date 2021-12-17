@@ -25,7 +25,7 @@ def fukusho(tickets, target_ranks, first_prize, second_prize, third_prize):
         elif rank == 2:
             num_hit += 1
             ret += second_prize 
-        elif rank == 3:
+        elif rank == 3 and len(target_ranks) > 7:
             num_hit += 1
             ret += third_prize             
 
