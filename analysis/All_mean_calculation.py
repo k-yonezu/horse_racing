@@ -53,7 +53,7 @@ mean_data = pd.DataFrame(
     }
 )
 
-mean_data.to_csv('/Users/nawajieita/Desktop/競馬予想/horse_racing/csv/mean_rank-odds_'+str(target_Y)+'_rider_id.csv')
+mean_data.to_csv(GOOGLE_DRIVE_PATH + '/jockey/mean_rank-odds_'+str(target_Y)+'_rider_id.csv')
 
 # uniqueなrace_id取得
 race_uni = list(df['race_id'].unique())
@@ -62,5 +62,5 @@ print('uni length= ', len(race_uni))
 # horse_raceのdataにmean情報を付与する。
 df_mean = cj.make_mean(df,race_uni)
 
-df_mean.to_csv('/Users/nawajieita/Desktop/競馬予想/horse_racing/csv/add_mean_horse_race/add_mean_'+str(target_Y)+'.csv')
+df_mean.to_csv(GOOGLE_DRIVE_PATH + '/jockey/add_mean_horse_race/add_mean_'+str(target_Y)+'.csv')
 print('df_mean', df_mean.shape, 'df', df.shape)

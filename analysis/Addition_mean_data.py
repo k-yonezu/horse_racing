@@ -18,7 +18,7 @@ path = GOOGLE_DRIVE_PATH + '/scraping'
 target_Y = int(input('Addition year: '))
 
 # 統合する元のデータを読み込む
-df = pd.read_csv(GOOGLE_DRIVE_PATH + '/horse_racing/csv/add_mean_horse_race/' + 'add_mean_' + str(target_Y - 1) + '.csv')
+df = pd.read_csv(GOOGLE_DRIVE_PATH + '/jockey/add_mean_horse_race/' + 'add_mean_' + str(target_Y - 1) + '.csv')
 df = df.iloc[:,1:]
 # 型変換 -> DataFrame
 df['rank'] = df['rank'].astype(int)
@@ -48,5 +48,5 @@ print('uni length= ', len(race_uni))
 
 # horse_raceのdataにmean情報を付与する。
 concat_df = cj.add_mean(df, add_df, race_uni)
-concat_df.to_csv('/Users/nawajieita/Desktop/競馬予想/horse_racing/csv/add_mean_horse_race/add_mean_'+str(target_Y)+'.csv')
+concat_df.to_csv(GOOGLE_DRIVE_PATH + '/jockey/add_mean_horse_race/add_mean_'+str(target_Y)+'.csv')
 print('concat_df= ',concat_df.shape)
